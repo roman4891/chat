@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "slim/slim": "^4.8",
-        "slim/psr7": "^1.4"
+        "slim/psr7": "^1.4",
+        "php-di/php-di": "^6.3"
     }
 }
