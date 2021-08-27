@@ -2,6 +2,10 @@ init: docker-down-clear docker-pull docker-build docker-up
 up: docker-up
 down: docker-down
 restart: down up
+lint: api-lint
+
+api-lint:
+	docker-compose run --rm api-php-cli composer lint
 
 docker-up:
 	docker-compose up -d
@@ -32,3 +36,6 @@ build-api:
 
 try-build:
 	REGISTRY=localhost IMAGE_TAG=0 make build
+
+api-composer-install:
+	docker-compose run --rm api-php-cli composer install
