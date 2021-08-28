@@ -6,6 +6,7 @@ lint: api-lint
 
 api-lint:
 	docker-compose run --rm api-php-cli composer lint
+	docker-compose run --rm api-php-cli composer cs-check
 
 docker-up:
 	docker-compose up -d
