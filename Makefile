@@ -3,6 +3,7 @@ up: docker-up
 down: docker-down
 restart: down up
 lint: api-lint
+test: api-test
 
 api-lint:
 	docker-compose run --rm api-php-cli composer lint
@@ -40,3 +41,6 @@ try-build:
 
 api-composer-install:
 	docker-compose run --rm api-php-cli composer install
+
+api-test:
+	docker-compose run --rm api-php-cli composer test
