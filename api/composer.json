@@ -12,11 +12,17 @@
     "require-dev": {
         "overtrue/phplint": "^3.0",
         "squizlabs/php_codesniffer": "^3.5",
-        "vimeo/psalm": "^3.8"
+        "vimeo/psalm": "^3.8",
+        "phpunit/phpunit": "^8"
     },
     "autoload": {
         "psr-4": {
             "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test/"
         }
     },
     "scripts": {
