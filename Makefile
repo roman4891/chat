@@ -44,3 +44,9 @@ api-composer-install:
 
 api-test:
 	docker-compose run --rm api-php-cli composer test
+
+api-test-functional:
+	docker-compose run --rm api-php-cli composer test -- --testsuite=functional
+
+api-test-unit:
+	docker-compose run --rm api-php-cli composer test -- --testsuite=unit
