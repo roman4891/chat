@@ -4,6 +4,7 @@ down: docker-down
 restart: down up
 lint: api-lint
 test: api-test
+test-unit-coverage: api-test-unit-coverage
 
 api-lint:
 	docker-compose run --rm api-php-cli composer lint
@@ -39,6 +40,8 @@ build-api:
 try-build:
 	REGISTRY=localhost IMAGE_TAG=0 make build
 
+api-init: api-composer-install api-permissions
+
 api-composer-install:
 	docker-compose run --rm api-php-cli composer install
 
@@ -50,3 +53,13 @@ api-test-functional:
 
 api-test-unit:
 	docker-compose run --rm api-php-cli composer test -- --testsuite=unit
+
+api-test-unit-coverage:
+	docker-compose run --rm api-php-cli composer test-unit-coverage
+
+api-clear:
+	docker-compose run --rm -v ${PWD}/api:/app -w /app alpine sh -c 'rm -rf var/*'
+
+api-permissions:
+	docker run --rm -v ${PWD}/api:/app -w /app alpine chmod 777 var
+

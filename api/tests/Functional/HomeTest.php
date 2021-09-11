@@ -5,6 +5,9 @@ namespace Test\Functional;
 
 use Test\Functional\WebTestCase;
 
+/**
+ * @coversNothing
+ */
 class HomeTest extends WebTestCase
 {
     public function testMethod(): void

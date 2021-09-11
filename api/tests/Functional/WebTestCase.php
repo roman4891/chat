@@ -10,6 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Factory\AppFactory;
 
+/**
+ * @coversNothing
+ */
 class WebTestCase extends TestCase
 {
     protected function app(): App
