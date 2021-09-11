@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace Test\Functional;
 
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Slim\App;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\Psr7\Factory\ServerRequestFactory;
-use Slim\Factory\AppFactory;
+use Test\Functional\WebTestCase;
 
-class HomeTest extends TestCase
+class HomeTest extends WebTestCase
 {
+    public function testMethod(): void
+    {
+        $response = $this->app()->handle(self::json('POST', '/'));
+
+        self::assertEquals(405, $response->getStatusCode());
+    }
+
     public function testSuccess(): void
     {
         $response = $this->app()->handle(self::json('GET', '/'));
@@ -19,29 +21,5 @@ class HomeTest extends TestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('application/json', $response->getHeaderLine('Content-Type'));
         self::assertEquals('{}', (string)$response->getBody());
-    }
-
-    protected function app(): App
-    {
-        $container = require __DIR__.'/../../config/container.php';
-
-        $app = AppFactory::createFromContainer($container);
-
-        (require __DIR__ . '/../../config/middleware.php')($app, $container);
-        (require __DIR__ . '/../../config/routes.php')($app);
-
-        return $app;
-    }
-
-    protected static function request(string $method, string $path): ServerRequestInterface
-    {
-        return (new ServerRequestFactory())->createServerRequest($method, $path);
-    }
-
-    protected static function json(string $method, string $path): ServerRequestInterface
-    {
-        return self::request($method, $path)
-            ->withHeader('Accept', 'application/json')
-            ->withHeader('Content-Type', 'application/json');
     }
 }
