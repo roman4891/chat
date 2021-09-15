@@ -8,29 +8,49 @@ use DateTimeImmutable;
 
 class User
 {
-    private string $id;
-    private string $email;
-    private string $hash;
+    private Id $id;
+    private Email $email;
+    private string $passwordHash;
     private DateTimeImmutable $date;
-    private string $token;
+    private ?Token $joinConfirmToken;
 
     public function __construct(
-        string $id,
+        Id $id,
         DateTimeImmutable $date,
-        string $email,
-        string $hash,
-        string $token
+        Email $email,
+        string $passwordHash,
+        Token $token
     )
     {
         $this->id = $id;
         $this->date = $date;
-        $this->email = strtolower($email);
-        $this->hash = $hash;
-        $this->token = $token;
+        $this->email = $email;
+        $this->passwordHash = $passwordHash;
+        $this->joinConfirmToken = $token;
     }
 
-    public function getId(): string
+    public function getId(): Id
     {
         return $this->id;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
+    public function getPasswordHash(): ?string
+    {
+        return $this->passwordHash;
+    }
+
+    public function getDate(): DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function getJoinConfirmToken(): Token
+    {
+        return $this->joinConfirmToken;
     }
 }

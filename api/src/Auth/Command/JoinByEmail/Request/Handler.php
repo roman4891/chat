@@ -4,35 +4,60 @@ declare(strict_types=1);
 
 namespace App\Auth\Command\JoinByEmail\Request;
 
+use App\Auth\Entity\Email;
+use App\Auth\Entity\Id;
 use App\Auth\Entity\User;
 use DateTimeImmutable;
 use Ramsey\Uuid\Uuid;
+use UsersRepository;
 
 class Handler
 {
     private UsersRepository $users;
+    private PasswordHasher $passwordHasher;
+    private Tokenizer $tokenizer;
+    private Flusher $flusher;
+    private JoinConfirmationSender $sender;
 
-    public function __construct(UsersRepository $users)
+    public function __construct(
+        UsersRepository $users,
+        PasswordHasher $passwordHasher,
+        Tokenizer $tokenizer,
+        Flusher $flusher,
+        JoinConfirmationSender $sender
+    )
     {
         $this->users = $users;
+        $this->passwordHasher = $passwordHasher;
+        $this->tokenizer = $tokenizer;
+        $this->flusher = $flusher;
+        $this->sender = $sender;
     }
 
     public function handle(Command $command): void
     {
-        $email = strtolower($command->email);
+        $email = new Email($command->email);
 
         if ($this->users->hasByEmail($email)) {
             throw new \DomainException('User already exist');
         }
 
+        $date = new DateTimeImmutable();
+
+//        $token = new Token(Uuid::uuid4()->toString(), DateTimeImmutable('+1 hour'));
+
         $user = new User(
-            Uuid::uuid4()->toString(),
-            new DateTimeImmutable(),
+            Id::generate(),
+            $date,
             $email,
-            password_hash($command->password, PASSWORD_ARGON2I),
-            Uuid::uuid4()->toString(),
+            $this->passwordHasher->hash($command->password),
+            $token = $this->tokenizer->generate($date)
         );
 
         $this->users->add($user);
+
+        $this->flusher->flush();
+
+        $this->sender->send($email, $token);
     }
 }
