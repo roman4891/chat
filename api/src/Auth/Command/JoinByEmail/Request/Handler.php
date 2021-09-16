@@ -6,7 +6,9 @@ namespace App\Auth\Command\JoinByEmail\Request;
 
 use App\Auth\Entity\Email;
 use App\Auth\Entity\Id;
+use App\Auth\Entity\Token;
 use App\Auth\Entity\User;
+use App\Auth\Service\Tokenizer;
 use DateTimeImmutable;
 use Ramsey\Uuid\Uuid;
 use UsersRepository;
@@ -44,14 +46,14 @@ class Handler
 
         $date = new DateTimeImmutable();
 
-//        $token = new Token(Uuid::uuid4()->toString(), DateTimeImmutable('+1 hour'));
+        $token = $this->tokenizer->generate($date);
 
         $user = new User(
             Id::generate(),
             $date,
             $email,
             $this->passwordHasher->hash($command->password),
-            $token = $this->tokenizer->generate($date)
+            $token
         );
 
         $this->users->add($user);
