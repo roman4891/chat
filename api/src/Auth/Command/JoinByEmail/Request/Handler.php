@@ -48,7 +48,7 @@ class Handler
 
         $token = $this->tokenizer->generate($date);
 
-        $user = new User(
+        $user = User::requestJoinByEmail(
             Id::generate(),
             $date,
             $email,
