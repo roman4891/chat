@@ -11,6 +11,7 @@ interface UsersRepository
     public function findByConfirmToken($token): ?User;
     public function hasByNetwork($identity): bool;
     public function attachNetwork($identity): void;
+    public function findByPasswordResetToken(string $token): ?User;
 
     /**
      * @param Id $id
@@ -19,4 +20,5 @@ interface UsersRepository
      */
     public function getId(Id $id): User;
     public function add(User $user): void;
+    public function getByEmail($email): Email;
 }
