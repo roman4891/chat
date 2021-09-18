@@ -21,6 +21,7 @@ class User
     private ?Token $passwordResetToken;
     private ?Email $newEmail;
     private ?Token $newEmailToken;
+    private Role $role;
 
     public function __construct(
         Id $id,
@@ -33,6 +34,7 @@ class User
         $this->date = $date;
         $this->email = $email;
         $this->status = $status;
+        $this->role = Role::user();
         $this->networks = new ArrayObject();
     }
 
@@ -185,5 +187,10 @@ class User
         $this->email = $this->newEmail;
         $this->newEmail = null;
         $this->newEmailToken = null;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        $this->role = $role;
     }
 }
