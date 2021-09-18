@@ -19,6 +19,8 @@ class User
     private Status $status;
     private ArrayObject $networks;
     private ?Token $passwordResetToken;
+    private ?Email $newEmail;
+    private ?Token $newEmailToken;
 
     public function __construct(
         Id $id,
@@ -154,5 +156,34 @@ class User
         }
 
         $this->passwordHash = $hasher->hash($new);
+    }
+
+    public function requestEmailChanging(Token $token, DateTimeImmutable $date, Email $email): void
+    {
+        if (!$this->$this->isActive()) {
+            throw new DomainException('User is not active');
+        }
+
+        if ($this->email->isEqualTo($email)) {
+            throw new DomainException('Email is already same!');
+        }
+
+        if ($this->newEmailToken !== null && !$this->newEmailToken->isExpiredTo($date)) {
+            throw new DomainException('Changing is already requested!');
+        }
+
+        $this->newEmail = $email;
+        $this->newEmailToken = $token;
+    }
+
+    public function confirmEmailChanging(string $token, DateTimeImmutable $date): void
+    {
+        if ($this->newEmail === null || $this->newEmailToken === null) {
+            throw new DomainException('Changing is not requested');
+        }
+        $this->newEmailToken->validate($token, $date);
+        $this->email = $this->newEmail;
+        $this->newEmail = null;
+        $this->newEmailToken = null;
     }
 }
