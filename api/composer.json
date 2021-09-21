@@ -9,7 +9,9 @@
         "ext-json": "*",
         "symfony/console": "^5.3",
         "ramsey/uuid": "^4.2",
-        "webmozart/assert": "^1.6"
+        "webmozart/assert": "^1.6",
+        "doctrine/orm": "^2.7",
+        "laminas/laminas-config-aggregator": "^1.2"
     },
     "require-dev": {
         "overtrue/phplint": "^3.0",
@@ -33,6 +35,7 @@
         "cs-fix": "phpcbf",
         "psalm": "psalm",
         "test": "phpunit --colors=always",
-        "test-unit-coverage": "phpunit --colors=always --testsuite=unit --coverage-html var/coverage"
+        "test-unit-coverage": "phpunit --colors=always --testsuite=unit --coverage-html var/coverage",
+        "app": "php bin/app.php --ansi"
     }
 }
