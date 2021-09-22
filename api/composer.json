@@ -10,8 +10,10 @@
         "symfony/console": "^5.3",
         "ramsey/uuid": "^4.2",
         "webmozart/assert": "^1.6",
-        "doctrine/orm": "^2.7",
-        "laminas/laminas-config-aggregator": "^1.2"
+        "laminas/laminas-config-aggregator": "^1.2",
+        "doctrine/orm": "^2.9",
+        "symfony/cache": "^5.3",
+        "symfony/config": "^5.3"
     },
     "require-dev": {
         "overtrue/phplint": "^3.0",
