@@ -2,31 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Entity;
+namespace App\Auth\Entity\User;
 
 use http\Exception\InvalidArgumentException;
-use Ramsey\Uuid\Nonstandard\Uuid;
 use Webmozart\Assert\Assert;
 
-class Id
+class Email
 {
     private $value;
 
     public function __construct(string $value)
     {
         Assert::notEmpty($value);
-        Assert::uuid($value);
+        Assert::email($value);
 
         $this->value = mb_strtolower($value);
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    public static function generate(): self
+    public function isEqualTo(self $other): bool
     {
-        return new seld(Uuid::uuid4()->toString());
+        return $this->value === $other->value;
     }
 }

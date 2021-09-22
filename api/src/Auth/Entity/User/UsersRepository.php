@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth\Entity;
+namespace App\Auth\Entity\User;
 
 use DomainException;
 

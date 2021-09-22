@@ -2,18 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Entity;
+namespace App\Auth\Entity\User;
 
 use App\Auth\Service\PasswordHasher;
 use ArrayObject;
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="auth_users")
+ */
 class User
 {
+    /**
+     * @ORM\Column(type="auth_user_id")
+     * @ORM\Id()
+     */
     private Id $id;
+
     private Email $email;
-    private string $passwordHash;
+
+    /**
+     * @ORM\Column(type="string", name="password_hash", nullable=true)
+     */
+    private ?string $passwordHash = null;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
     private DateTimeImmutable $date;
     private ?Token $joinConfirmToken;
     private Status $status;
