@@ -12,6 +12,7 @@ use Doctrine\ORM\Tools\Setup;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Doctrine\DBAL\Types\Type;
 
 return [
     EntityManagerInterface::class => function (ContainerInterface $container): EntityManagerInterface {
@@ -39,6 +40,12 @@ return [
         );
 
         $config->setNamingStrategy(new UnderscoreNamingStrategy());
+
+        foreach ($settings['types'] as $name => $class) {
+            if (!Type::hasType($name)) {
+                Type::addType($name, $class);
+            }
+        }
 
         return EntityManager::create(
             $settings['connection'],
