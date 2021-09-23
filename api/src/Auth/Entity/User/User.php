@@ -7,12 +7,15 @@ namespace App\Auth\Entity\User;
 use App\Auth\Service\PasswordHasher;
 use ArrayObject;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="auth_users")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User
 {
@@ -22,6 +25,9 @@ class User
      */
     private Id $id;
 
+    /**
+     * @ORM\Column(type="auth_user_email", unique=true)
+     */
     private Email $email;
 
     /**
@@ -33,13 +39,38 @@ class User
      * @ORM\Column(type="datetime_immutable")
      */
     private DateTimeImmutable $date;
+
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $joinConfirmToken;
+
+    /**
+     * @ORM\Column(type="auth_user_status", length=16)
+     */
     private Status $status;
-    private ArrayObject $networks;
+
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $passwordResetToken;
+
+    /**
+     * @ORM\Column(type="auth_user_email", nullable=true)
+     */
     private ?Email $newEmail;
+
+    /**
+     * @ORM\Embedded(class="Token")
+     */
     private ?Token $newEmailToken;
+
+    /**
+     * @ORM\Column(type="auth_user_role", length=16)
+     */
     private Role $role;
+
+    private Collection $networks;
 
     public function __construct(
         Id $id,
@@ -53,7 +84,7 @@ class User
         $this->email = $email;
         $this->status = $status;
         $this->role = Role::user();
-        $this->networks = new ArrayObject();
+        $this->networks = new ArrayCollection();
     }
 
     public static function requestJoinByEmail(
@@ -79,7 +110,7 @@ class User
     ): self
     {
         $user = new self($id, $date, $email, Status::active());
-        $user->networks->append($network);
+        $user->networks->add($network);
 
         return $user;
     }
@@ -117,6 +148,12 @@ class User
     public function isActive(): bool
     {
         return $this->status === $this->status->isActive();
+    }
+
+    public function getNetworks(): array
+    {
+        /** @var Network[] */
+        return $this->networks->toArray();
     }
 
     public function confirmJoin(string $token, DateTimeImmutable $date): void
@@ -216,6 +253,24 @@ class User
     {
         if (!$this->isWait()) {
             throw new DomainException('...');
+        }
+    }
+
+    /**
+     * @ORM\PostLoad()
+     */
+    public function checkEmbeds(): void
+    {
+        if ($this->joinConfirmToken && $this->joinConfirmToken->isEmpty()) {
+            $this->joinConfirmToken = null;
+        }
+
+        if ($this->passwordResetToken && $this->passwordResetToken->isEmpty()) {
+            $this->passwordResetToken = null;
+        }
+
+        if ($this->newEmailToken && $this->newEmailToken->isEmpty()) {
+            $this->newEmailToken = null;
         }
     }
 }

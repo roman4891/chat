@@ -29,4 +29,9 @@ class Id
     {
         return new seld(Uuid::uuid4()->toString());
     }
+
+    public function __toString(): string
+    {
+        return $this->getValue();
+    }
 }
