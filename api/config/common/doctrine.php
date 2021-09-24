@@ -60,10 +60,10 @@ return [
             'proxy_dir' => __DIR__ . '/../../var/cache/doctrine/proxy',
             'connection' => [
                 'driver' => 'pdo_pgsql',
-                'host' => getenv('DB_HOST'),
-                'user' => getenv('DB_USER'),
-                'password' => getenv('DB_PASSWORD'),
-                'dbname' => getenv('DB_NAME'),
+                'host' => 'chat_api-postgtres_1',  //getenv('DB_HOST'),
+                'user' => 'app',    //getenv('DB_USER'),
+                'password' => 'secret', //getenv('DB_PASSWORD'),
+                'dbname' => 'app',  //getenv('DB_NAME'),
                 'charset' => 'utf-8'
             ],
             'metadata_dirs' => [
