@@ -70,6 +70,9 @@ class User
      */
     private Role $role;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserNetwork", mappedBy="user", cascade={"all"}, orphanRemoval=true)
+     */
     private Collection $networks;
 
     public function __construct(
@@ -153,7 +156,10 @@ class User
     public function getNetworks(): array
     {
         /** @var Network[] */
-        return $this->networks->toArray();
+        return $this->networks->map(
+            static function(UserNetwork $network) {
+                return $network->getNetwork();
+            })->toArray();
     }
 
     public function confirmJoin(string $token, DateTimeImmutable $date): void
@@ -169,12 +175,12 @@ class User
 
     public function attachNetwork(Network $network): void
     {
-        /** @var Network $network */
-        foreach ($this->networks as $network) {
-            if ($network->isEqualTo($network)) {
-                throw new DomainException('Network is already attached!');
+        foreach ($this->networks as $existing) {
+            if ($existing->getNetwork()->isEqualTo($network)) {
+                throw new DomainException('Network is already attached.');
             }
         }
+        $this->networks->add(new UserNetwork($this, $network));
 
         $this->networks->append($network);
     }
