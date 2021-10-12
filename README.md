@@ -1,1 +1,1 @@
-# Slim + ReactJS Demo Auction
+# Slim + ReactJS Demo
